@@ -10,10 +10,10 @@
    <children>
       <BorderPane layoutX="122.0" layoutY="140.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <Pane fx:id="area" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <AnchorPane fx:id="area" />
          </center>
          <bottom>
-            <Slider fx:id="slider" blockIncrement="1.0" majorTickUnit="1.0" max="12.0" onMouseDragged="#changeAction" showTickLabels="true" showTickMarks="true" value="1.0" BorderPane.alignment="CENTER" />
+            <Slider fx:id="slider" blockIncrement="1.0" majorTickUnit="1.0" max="18.0" onMouseDragged="#changeAction" showTickLabels="true" showTickMarks="true" value="1.0" BorderPane.alignment="CENTER" />
          </bottom>
       </BorderPane>
    </children>

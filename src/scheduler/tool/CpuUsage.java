@@ -33,8 +33,8 @@ public class CpuUsage {
     this.isAlive = true;
     this.duration = 1;
     this.lastime = time.now;
-    this.rectangle = new Rectangle(Taskview.BLOCK_SIZE, 10, Color.GREEN);
-    this.rectangle.setX(init * Taskview.BLOCK_SIZE);
+    this.rectangle = new Rectangle(Taskview.BLOCK_WIDTH, 10, Color.GREEN);
+    this.rectangle.setX(init * Taskview.BLOCK_WIDTH);
   }
 
   /**
@@ -66,7 +66,7 @@ public class CpuUsage {
     }
     duration++;
     lastime = time.now;
-    rectangle.setWidth(duration * Taskview.BLOCK_SIZE);
+    rectangle.setWidth(duration * Taskview.BLOCK_WIDTH);
   }
 
   /**

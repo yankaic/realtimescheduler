@@ -36,7 +36,7 @@ public class Main extends Application {
       TaskGroup controler = loader.getController();
       
       Scheduler scheduler = new RateMonotonic();
-      scheduler.add(new Task("A", 0, 2, 5, 5));
+      scheduler.add(new Task("A", 0, 2, 4, 5));
       scheduler.add(new Task("B", 1, 1, 3, 3));
       Task[] tasks = scheduler.compute();
       System.out.println(Arrays.toString(tasks));
@@ -51,7 +51,7 @@ public class Main extends Application {
       iOException.printStackTrace();
     }
 
-    Scene scene = new Scene(root, 600, 400);
+    Scene scene = new Scene(root, 900, 400);
     primaryStage.setTitle("Escalonador de processor");
     primaryStage.setScene(scene);
     primaryStage.show();
