@@ -2,7 +2,7 @@ package scheduler.tool;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import scheduler.gui.Taskview;
+import scheduler.gui.InstanceView;
 
 /**
  * Classe que faz a marcacao de tempo com inicio e duração. Isso alocado com uma
@@ -33,8 +33,8 @@ public class CpuUsage {
     this.isAlive = true;
     this.duration = 1;
     this.lastime = time.now;
-    this.rectangle = new Rectangle(Taskview.BLOCK_WIDTH, 10, Color.GREEN);
-    this.rectangle.setX(init * Taskview.BLOCK_WIDTH);
+    this.rectangle = new Rectangle(InstanceView.BLOCK_WIDTH, 10, Color.GREEN);
+    this.rectangle.setX(init * InstanceView.BLOCK_WIDTH);
   }
 
   /**
@@ -66,7 +66,7 @@ public class CpuUsage {
     }
     duration++;
     lastime = time.now;
-    rectangle.setWidth(duration * Taskview.BLOCK_WIDTH);
+    rectangle.setWidth(duration * InstanceView.BLOCK_WIDTH);
   }
 
   /**

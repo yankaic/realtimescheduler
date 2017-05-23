@@ -2,7 +2,7 @@ package scheduler.model;
 
 import scheduler.tool.Timestamp;
 import scheduler.tool.CpuUsage;
-import scheduler.gui.Taskview;
+import scheduler.gui.InstanceView;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class Task {
   private int deadline;
   private int period;
   private int computation;
-  private Taskview view;
+  private InstanceView view;
   private final List<CpuUsage> usages;
   private Timestamp time;
 

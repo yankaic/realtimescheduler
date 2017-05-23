@@ -42,9 +42,9 @@ public class Main extends Application {
       System.out.println(Arrays.toString(tasks));
       
       for (Task task : tasks) {
-        if(task.getName().equals("A")){
           controler.addTask(task);
-        }
+//        if(task.getName().equals("A")){
+//        }
       }
     }
     catch (IOException iOException) {

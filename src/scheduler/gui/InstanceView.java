@@ -4,7 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -16,7 +20,7 @@ import scheduler.tool.CpuUsage;
  *
  * @author yanka
  */
-public class Taskview extends Pane {
+public class InstanceView extends Pane {
 
   public static final int BLOCK_HEIGHT = 14;
   public static final int BLOCK_WIDTH = 50;
@@ -40,7 +44,7 @@ public class Taskview extends Pane {
    *
    * @param task
    */
-  public Taskview(Task task) {
+  public InstanceView(Task task) {
     super();
     consumed = new LinkedList<>();
     unconsumed = new LinkedList<>();
@@ -66,6 +70,7 @@ public class Taskview extends Pane {
     remain.setY(2);
     getChildren().add(half);
     getChildren().add(remain);
+//    setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
   }
 
@@ -163,6 +168,10 @@ public class Taskview extends Pane {
     this.gapY = y;
     drawLines();
     paint();
+  }
+  
+  public Task getTask(){
+    return task;
   }
 
   public Bounds getBounds() {
