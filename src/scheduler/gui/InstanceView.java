@@ -39,6 +39,7 @@ public class InstanceView extends Pane {
   private Line initline;
   private Line deadline;
   private double gapY;
+  private Rectangle area;
 
   /**
    *
@@ -62,6 +63,10 @@ public class InstanceView extends Pane {
       unconsumed.add(use.getView());
       getChildren().add(use.getView());
       use.getView().setY(2);
+
+      if (use.getInit() >= task.getAbsoluteDeadline()) {
+        use.getView().setFill(Color.RED);
+      }
     }
 
     half = new Rectangle(0, 10, Color.GREEN);
@@ -71,7 +76,7 @@ public class InstanceView extends Pane {
     getChildren().add(half);
     getChildren().add(remain);
 //    setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-
+    area = new Rectangle(0, 0);
   }
 
   /**
@@ -95,6 +100,7 @@ public class InstanceView extends Pane {
       }
       else {
         active = rect;
+
       }
       consumed.remove(rect);
     }
@@ -123,6 +129,13 @@ public class InstanceView extends Pane {
       half.setX(active.getX());
       half.setWidth((time - active.getX() / BLOCK_WIDTH) * BLOCK_WIDTH);
       half.setY(gapY + 2);
+
+      if (task.isFail()) {
+        half.setFill(Color.RED);
+      }
+      else {
+        half.setFill(Color.GREEN);
+      }
     }
     else {
       half.setWidth(0);
@@ -134,11 +147,13 @@ public class InstanceView extends Pane {
     for (Rectangle rectangle : unconsumed) {
       rectangle.setVisible(false);
     }
+    
+   
     remain.setVisible(time > task.getInitTime());
     remain.setX(time * BLOCK_WIDTH);
     remain.setY(gapY + 2);
     remain.setWidth(getRemain() * BLOCK_WIDTH - half.getWidth() % BLOCK_WIDTH);
-   }
+  }
 
   private int getRemain() {
     return task.getComputation() - task.getTotalCPU();
@@ -169,8 +184,8 @@ public class InstanceView extends Pane {
     drawLines();
     paint();
   }
-  
-  public Task getTask(){
+
+  public Task getTask() {
     return task;
   }
 
@@ -186,8 +201,13 @@ public class InstanceView extends Pane {
       }
     }
 
-    Bounds bounds = new BoundingBox(line.getStartX(), initline.getStartY(),
-            width, line.getEndY());
+    Bounds bounds = new BoundingBox(line.getStartX() + 1, initline.getStartY(),
+            width - line.getStartX() - 1, line.getEndY() - line.getStartY());
+    area.setX(bounds.getMinX());
+    area.setY(bounds.getMinY());
+    area.setWidth(width);
+    area.setHeight(line.getEndY());
+
     return bounds;
   }
 

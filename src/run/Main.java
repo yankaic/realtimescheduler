@@ -41,11 +41,7 @@ public class Main extends Application {
       Task[] tasks = scheduler.compute();
       System.out.println(Arrays.toString(tasks));
       
-      for (Task task : tasks) {
-          controler.addTask(task);
-//        if(task.getName().equals("A")){
-//        }
-      }
+     
     }
     catch (IOException iOException) {
       iOException.printStackTrace();

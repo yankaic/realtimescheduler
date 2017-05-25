@@ -84,7 +84,14 @@ public class Task {
    * @return true - se falhou <br> false - não falhou
    */
   public boolean isFail() {
-    return time.now > getAbsoluteDeadline() && !isDone();
+    boolean generalFail = false;
+    for (CpuUsage usage : usages) {
+      if(usage.getInit()+usage.getDuration()>getAbsoluteDeadline()){
+        generalFail = true;
+        break;
+      }
+    }
+    return time.now >= getAbsoluteDeadline() && generalFail;
   }
 
   /**

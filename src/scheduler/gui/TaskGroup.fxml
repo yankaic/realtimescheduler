@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.shape.*?>
@@ -10,27 +11,27 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.gui.controller.TaskGroup">
+<AnchorPane id="AnchorPane" prefHeight="454.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.gui.controller.TaskGroup">
    <children>
       <SVGPath content="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#797979" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="0.0" />
-      <SVGPath content="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="#6b6b6b" AnchorPane.topAnchor="0.0" />
+      <SVGPath fx:id="pauseIcon" content="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="#6b6b6b" AnchorPane.topAnchor="0.0" />
       <BorderPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
             <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="681.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pronto" />
+                        <Text fx:id="timeLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Pronto" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
                      </padding>
                   </HBox>
-                  <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                  <HBox fx:id="statusPane" alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                      <children>
-                        <SVGPath content="M10,17L5,12L6.41,10.58L10,14.17L17.59,6.58L19,8M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" fill="#0c9e09" layoutX="86.0" layoutY="12.0" scaleX="0.8" scaleY="0.8" />
-                        <SVGPath content="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z" fill="RED" scaleX="0.8" scaleY="0.8" />
-                        <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Não escalonável" />
+                        <SVGPath fx:id="winIcon" content="M10,17L5,12L6.41,10.58L10,14.17L17.59,6.58L19,8M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" fill="#0c9e09" layoutX="86.0" layoutY="12.0" scaleX="0.8" scaleY="0.8" />
+                        <SVGPath fx:id="errorIcon" content="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z" fill="RED" scaleX="0.8" scaleY="0.8" />
+                        <Text fx:id="statusLabel" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Não escalonável" />
                      </children>
                      <padding>
                         <Insets right="10.0" />
@@ -48,20 +49,23 @@
          <center>
             <AnchorPane>
                <children>
-                  <ScrollPane prefHeight="317.0" prefWidth="581.0" style="-fx-background-size: 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
+                  <ScrollPane fx:id="scrollpane" fitToHeight="true" prefHeight="336.0" prefWidth="619.0" style="-fx-border-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
                      <content>
-                        <StackPane alignment="TOP_LEFT" style="-fx-background-size: 0;">
+                        <StackPane alignment="BOTTOM_LEFT">
                            <children>
-                              <VBox fx:id="tasklistview" fillWidth="false" prefHeight="262.0" prefWidth="502.0" spacing="10.0">
-                                 <StackPane.margin>
-                                    <Insets left="5.0" />
-                                 </StackPane.margin>
+                              <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">
+                                 <center>
+                                    <VBox fx:id="tasklistview" fillWidth="false" prefHeight="262.0" prefWidth="502.0" spacing="10.0" BorderPane.alignment="CENTER" />
+                                 </center>
+                                 <bottom>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="555.0" style="-fx-background-color: white; -fx-border-color: lightgray;" visible="false" BorderPane.alignment="CENTER" />
+                                 </bottom>
                                  <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    <Insets left="10.0" right="10.0" top="10.0" />
                                  </padding>
-                              </VBox>
-                              <Line fx:id="markline" endY="300.0" stroke="#5d0ab5" translateX="25.0" />
-                              <Circle fx:id="sliderSelector" fill="DODGERBLUE" onMouseDragged="#dragmouse" radius="5.0" stroke="#1f06ff" strokeType="INSIDE" translateX="20.0" translateY="100.0" />
+                              </BorderPane>
+                              <Line fx:id="line" endY="200.0" stroke="#616161" translateX="20.0" />
+                              <Circle fx:id="ball" fill="WHITE" onMouseDragged="#changeAction" radius="8.0" stroke="#9a9a9a" strokeType="INSIDE" strokeWidth="3.0" translateX="12.0" />
                            </children>
                         </StackPane>
                      </content>
@@ -75,15 +79,15 @@
          <top>
             <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false">
+                  <Button fx:id="playButton" mnemonicParsing="false" onAction="#playAction">
                      <padding>
                         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                      </padding>
                      <graphic>
-                        <SVGPath content="M8 5v14l11-7z" fill="#6b6b6b" />
+                        <SVGPath fx:id="playIcon" content="M8 5v14l11-7z" fill="#6b6b6b" />
                      </graphic>
                   </Button>
-                  <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="55.0">
+                  <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#stopAction" prefHeight="31.0" prefWidth="55.0">
                      <graphic>
                         <SVGPath content="M0 0h24v24H0z" fill="#6b6b6b" scaleX="0.5" scaleY="0.5" />
                      </graphic>
@@ -93,7 +97,7 @@
                   </Button>
                   <ComboBox prefHeight="35.0" prefWidth="150.0" promptText="Algoritmo" />
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <AnchorPane style="-fx-border-style: black;">
+                  <AnchorPane>
                      <children>
                         <Text fill="#464646" strokeType="OUTSIDE" strokeWidth="0.0" text="A" textAlignment="CENTER" wrappingWidth="38.13671875" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
@@ -102,10 +106,10 @@
                         </Text>
                      </children>
                   </AnchorPane>
-                  <TextField alignment="CENTER" prefHeight="37.0" prefWidth="56.0" promptText="period" />
-                  <TextField alignment="CENTER" layoutX="162.0" layoutY="26.0" prefHeight="47.0" prefWidth="56.0" promptText="comput" />
-                  <TextField alignment="CENTER" layoutX="228.0" layoutY="26.0" prefHeight="84.0" prefWidth="56.0" promptText="dead" />
-                  <Button mnemonicParsing="false">
+                  <TextField fx:id="periodField" alignment="CENTER" onKeyTyped="#keyAction" prefHeight="37.0" prefWidth="56.0" promptText="period" />
+                  <TextField fx:id="computeField" alignment="CENTER" layoutX="162.0" layoutY="26.0" onKeyTyped="#keyAction" prefHeight="47.0" prefWidth="56.0" promptText="comput" />
+                  <TextField fx:id="deadField" alignment="CENTER" layoutX="228.0" layoutY="26.0" onKeyTyped="#keyAction" prefHeight="84.0" prefWidth="56.0" promptText="dead" />
+                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#addAction">
                      <padding>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                      </padding>
