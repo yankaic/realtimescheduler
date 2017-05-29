@@ -6,20 +6,15 @@
 package scheduler.gui.controller;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.Semaphore;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,19 +23,17 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -51,7 +44,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import scheduler.gui.InstanceView;
 import scheduler.model.EDF;
-import scheduler.model.LSF;
+import scheduler.model.LST;
 import scheduler.model.RateMonotonic;
 import scheduler.model.Scheduler;
 import scheduler.model.Task;
@@ -108,6 +101,15 @@ public class TaskGroup implements Initializable {
   private Text letterLabel;
   @FXML
   private ComboBox<?> algorithmSelector;
+  private Task selectedTask;
+  @FXML
+  private SVGPath doneIcon;
+  @FXML
+  private SVGPath addIcon;
+  @FXML
+  private Button removeButton;
+  @FXML
+  private SVGPath addIcon1;
 
   /**
    * Initializes the controller class.
@@ -123,7 +125,6 @@ public class TaskGroup implements Initializable {
       line.setEndY(scrollpane.getHeight() - 20);
 
     });
-
     line.translateXProperty().addListener(e -> {
       double x = line.getTranslateX();
       ball.setTranslateX(x - ball.getRadius());
@@ -151,15 +152,53 @@ public class TaskGroup implements Initializable {
 
     ObservableList options
             = FXCollections.observableArrayList(
-                    "Rate Monotonic",
-                    "EDF",
-                    "LSF"
+                    "RM - Rate Monotonic",
+                    "EDF - Earliest Deadline",
+                    "LST - Least Slack Time"
             );
     algorithmSelector.setItems(options);
-//
-//    addTask(new Task(lastLetter++ + "", 0, 2, 5, 5));
-//    addTask(new Task(lastLetter++ + "", 0, 1, 3, 4));
-//    addTask(new Task(lastLetter++ + "", 0, 2, 6, 6));
+
+    fieldEvents();
+
+    addDefaultTasks();
+  }
+
+  private void fieldEvents() {
+    computeField.textProperty().addListener(new ChangeListener<String>() {
+      
+      @Override
+      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if (!newValue.matches("\\d*")) {
+          computeField.setText(oldValue);
+        }
+      }
+    });
+    periodField.textProperty().addListener(new ChangeListener<String>() {
+
+      @Override
+      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if (!newValue.matches("\\d*")) {
+          periodField.setText(oldValue);
+        }
+      }
+    });
+    
+    deadField.textProperty().addListener(new ChangeListener<String>() {
+
+      @Override
+      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if (!newValue.matches("\\d*")) {
+          deadField.setText(oldValue);
+        }
+      }
+    });
+  }
+
+  private void addDefaultTasks() {
+    addTask(new Task(lastLetter++ + "", 0, 2, 5, 5));
+    addTask(new Task(lastLetter++ + "", 0, 1, 3, 4));
+    addTask(new Task(lastLetter++ + "", 0, 2, 6, 6));
+    selectTask("");
   }
 
   @FXML
@@ -220,13 +259,18 @@ public class TaskGroup implements Initializable {
     int period = Integer.parseInt(periodField.getText());
     int dead = Integer.parseInt(deadField.getText());
 
-    Task task = new Task(lastLetter++ + "", 0, computation, period, dead);
-    addTask(task);
+    if (selectedTask != null) {
+      selectedTask.setComputation(computation);
+      selectedTask.setPeriod(period);
+      selectedTask.setDeadline(dead);
+      repaint();
+    }
+    else {
+      Task task = new Task(lastLetter++ + "", 0, computation, period, dead);
+      addTask(task);
+    }
 
-    computeField.clear();
-    periodField.clear();
-    deadField.clear();
-    letterLabel.setText(lastLetter + "");
+    selectTask("");
   }
 
   private void clearAll() {
@@ -304,6 +348,9 @@ public class TaskGroup implements Initializable {
     text.setFont(new Font(24));
     pane.setCenter(text);
     pane.setPrefHeight(card.getHeight());
+    pane.setOnMouseClicked(e -> {
+      selectTask(name);
+    });
     labelBox.getChildren().add(pane);
   }
 
@@ -320,9 +367,7 @@ public class TaskGroup implements Initializable {
     }
   }
 
-  @FXML
-  private void keyAction(KeyEvent event) {
-  }
+ 
 
   @FXML
   private void playAction(ActionEvent event) {
@@ -355,20 +400,67 @@ public class TaskGroup implements Initializable {
   private void selectorAction(ActionEvent event) {
     String option = (String) algorithmSelector.getValue();
     switch (option) {
-      case "Rate Monotonic":
+      case "RM - Rate Monotonic":
         scheduler = new RateMonotonic();
         break;
-      case "EDF":
+      case "EDF - Earliest Deadline":
         scheduler = new EDF();
         break;
-      case "LSF":
-        scheduler = new LSF();
+      case "LST - Least Slack Time":
+        scheduler = new LST();
         break;
-
     }
     for (Task task : tasks) {
       scheduler.add(task);
     }
+    repaint();
+  }
+
+  private void selectTask(String name) {
+    for (Node node : labelBox.getChildren()) {
+      if (node instanceof BorderPane) {
+        BorderPane borderPane = (BorderPane) node;
+        Text text = (Text) borderPane.getCenter();
+        if (text.getText().equals(name)) {
+          borderPane.setStyle("-fx-background-color:lightgray");
+          text.setFill(Color.DARKBLUE);
+        }
+        else {
+          borderPane.setStyle("");
+          text.setFill(Color.BLACK);
+        }
+      }
+    }
+    selectedTask = null;
+    for (Task task : tasks) {
+      if (task.getName().equals(name)) {
+        selectedTask = task;
+      }
+    }
+
+    if (selectedTask != null) {
+      letterLabel.setText(name);
+      computeField.setText(selectedTask.getComputation() + "");
+      periodField.setText(selectedTask.getPeriod() + "");
+      deadField.setText(selectedTask.getDeadline() + "");
+      addButton.setGraphic(doneIcon);
+      removeButton.setDisable(false);
+    }
+    else {
+      computeField.clear();
+      periodField.clear();
+      deadField.clear();
+      letterLabel.setText(lastLetter + "");
+      addButton.setGraphic(addIcon);
+      removeButton.setDisable(true);
+    }
+  }
+
+  @FXML
+  private void removeAction(ActionEvent event) {
+    tasks.remove(selectedTask);
+    scheduler.remove(selectedTask);
+    selectTask("");
     repaint();
   }
 

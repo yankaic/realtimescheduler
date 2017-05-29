@@ -4,7 +4,7 @@ package scheduler.model;
  *
  * @author yanka
  */
-public class LSF extends Scheduler {
+public class LST extends Scheduler {
 
   @Override
   public void allocate(Task task) {

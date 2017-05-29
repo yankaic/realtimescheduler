@@ -106,7 +106,7 @@ public abstract class Scheduler {
    * @param task
    */
   public abstract void allocate(Task task);
-  
+
   public abstract boolean isWorking();
 
   /**
@@ -211,6 +211,10 @@ public abstract class Scheduler {
    */
   public Timestamp getTime() {
     return time;
+  }
+
+  public void remove(Task task) {
+    originalTasks.remove(task);
   }
 
 }

@@ -67,6 +67,10 @@ public class Task implements Comparable<Task> {
     return getTotalCPU() == computation;
   }
 
+  public int getRemain() {
+    return computation - getTotalCPU();
+  }
+
   /**
    * Função que calcula o deadline absoluto com base no tempo inicial e no
    * deadline relativo.
@@ -86,11 +90,12 @@ public class Task implements Comparable<Task> {
   public boolean isFail() {
     boolean generalFail = false;
     for (CpuUsage usage : usages) {
-      if(usage.getInit()+usage.getDuration()>getAbsoluteDeadline()){
+      if (usage.getInit() + usage.getDuration() > getAbsoluteDeadline()) {
         generalFail = true;
         break;
       }
     }
+    generalFail = generalFail || getRemain() > 0 && time.now >=getAbsoluteDeadline();
     return time.now >= getAbsoluteDeadline() && generalFail;
   }
 
@@ -184,8 +189,8 @@ public class Task implements Comparable<Task> {
   public List<CpuUsage> getConsume() {
     return usages;
   }
-  
-  public Timestamp getGlobalTime(){
+
+  public Timestamp getGlobalTime() {
     return time;
   }
 

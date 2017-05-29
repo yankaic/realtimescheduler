@@ -13,7 +13,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="454.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.gui.controller.TaskGroup">
    <children>
-      <SVGPath content="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#797979" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="0.0" />
+      <SVGPath fx:id="doneIcon" content="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#797979" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="0.0" />
       <SVGPath fx:id="pauseIcon" content="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="#6b6b6b" AnchorPane.topAnchor="0.0" />
       <BorderPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
@@ -43,13 +43,13 @@
          <left>
             <VBox fx:id="labelBox" alignment="TOP_CENTER" prefHeight="317.0" prefWidth="62.0" spacing="10.0" BorderPane.alignment="CENTER">
                <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="12.0" />
                </padding></VBox>
          </left>
          <center>
             <AnchorPane>
                <children>
-                  <ScrollPane fx:id="scrollpane" fitToHeight="true" prefHeight="336.0" prefWidth="619.0" style="-fx-border-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
+                  <ScrollPane fx:id="scrollpane" fitToHeight="true" pannable="true" prefHeight="336.0" prefWidth="619.0" style="-fx-border-color: white;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
                      <content>
                         <StackPane alignment="BOTTOM_LEFT">
                            <children>
@@ -95,7 +95,7 @@
                         <Insets bottom="6.0" left="15.0" right="15.0" top="6.0" />
                      </padding>
                   </Button>
-                  <ComboBox fx:id="algorithmSelector" onAction="#selectorAction" prefHeight="35.0" prefWidth="150.0" promptText="Rate Monotonic" />
+                  <ComboBox fx:id="algorithmSelector" onAction="#selectorAction" prefHeight="35.0" prefWidth="190.0" promptText="RM - Rate Monotonic" />
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <AnchorPane>
                      <children>
@@ -106,16 +106,24 @@
                         </Text>
                      </children>
                   </AnchorPane>
-                  <TextField fx:id="periodField" alignment="CENTER" onKeyTyped="#keyAction" prefHeight="37.0" prefWidth="56.0" promptText="period" />
-                  <TextField fx:id="computeField" alignment="CENTER" layoutX="162.0" layoutY="26.0" onKeyTyped="#keyAction" prefHeight="47.0" prefWidth="56.0" promptText="comput" />
-                  <TextField fx:id="deadField" alignment="CENTER" layoutX="228.0" layoutY="26.0" onKeyTyped="#keyAction" prefHeight="84.0" prefWidth="56.0" promptText="dead" />
+                  <TextField fx:id="periodField" alignment="CENTER" prefHeight="37.0" prefWidth="56.0" promptText="period" />
+                  <TextField fx:id="computeField" alignment="CENTER" layoutX="162.0" layoutY="26.0" prefHeight="47.0" prefWidth="56.0" promptText="comput" />
+                  <TextField fx:id="deadField" alignment="CENTER" layoutX="228.0" layoutY="26.0" prefHeight="84.0" prefWidth="56.0" promptText="dead" />
                   <Button fx:id="addButton" mnemonicParsing="false" onAction="#addAction">
                      <padding>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                      </padding>
                      <graphic>
-                        <SVGPath content="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#6f6f6f" />
+                        <SVGPath fx:id="addIcon" content="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#6f6f6f" />
                      </graphic>
+                  </Button>
+                  <Button fx:id="removeButton" disable="true" layoutX="609.0" layoutY="20.0" mnemonicParsing="false" onAction="#removeAction">
+                     <graphic>
+                        <SVGPath fx:id="addIcon1" content="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="#6f6f6f" />
+                     </graphic>
+                     <padding>
+                        <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                     </padding>
                   </Button>
                </children>
                <padding>

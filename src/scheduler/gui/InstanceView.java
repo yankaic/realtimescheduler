@@ -11,6 +11,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import scheduler.model.Task;
@@ -147,8 +148,7 @@ public class InstanceView extends Pane {
     for (Rectangle rectangle : unconsumed) {
       rectangle.setVisible(false);
     }
-    
-   
+
     remain.setVisible(time > task.getInitTime());
     remain.setX(time * BLOCK_WIDTH);
     remain.setY(gapY + 2);
@@ -177,6 +177,19 @@ public class InstanceView extends Pane {
     initline.setEndX(start);
     initline.setStartY(gapY);
     initline.setEndY(gapY + BLOCK_HEIGHT);
+
+    for (Object node : getChildren().toArray()) {
+      if (node instanceof Circle) {
+        Circle circle = (Circle) node;
+        getChildren().remove(node);
+      }
+    }
+
+    for (int x = start + BLOCK_WIDTH; x < end; x += BLOCK_WIDTH) {
+      Circle circle = new Circle(x, gapY + BLOCK_HEIGHT / 2, 1.3);
+      getChildren().add(0,circle);
+
+    }
   }
 
   public void setGapy(double y) {
