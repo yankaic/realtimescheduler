@@ -15,11 +15,11 @@ public abstract class Scheduler {
 
   protected final List<Task> readyQueue;
   private Task active;
-  private final List<Task> originalTasks;
+  protected final List<Task> originalTasks;
   private final ChronologicalQueue futureTasks;
   private final List<Task> doneList;
   private SchedulerView schedulerView;
-  private final Timestamp time;
+  protected final Timestamp time;
 
   /**
    * Construtor. Inicia o tempo do sistema. Todas as atividades do sistema devem
@@ -106,6 +106,8 @@ public abstract class Scheduler {
    * @param task
    */
   public abstract void allocate(Task task);
+  
+  public abstract boolean isWorking();
 
   /**
    * Calcular o MMC. Funcao que calcula o mmc dos periodos das tarefas base. O
@@ -143,7 +145,7 @@ public abstract class Scheduler {
    *
    * @return Lista contendo todas as tarefas escalonadas, inclusive instancias.
    */
-  public Task[] compute() {
+  public List<Task> compute() {
     //limpando todas as listas
     futureTasks.clear();
     readyQueue.clear();
@@ -186,7 +188,7 @@ public abstract class Scheduler {
       list[i] = doneList.get(i);
     }
 
-    return list;
+    return new LinkedList(doneList);
   }
 
   /**

@@ -23,7 +23,7 @@ import scheduler.tool.CpuUsage;
 public class InstanceView extends Pane {
 
   public static final int BLOCK_HEIGHT = 14;
-  public static final int BLOCK_WIDTH = 50;
+  public static final int BLOCK_WIDTH = 40;
 
   private Task task;
 

@@ -95,11 +95,11 @@
                         <Insets bottom="6.0" left="15.0" right="15.0" top="6.0" />
                      </padding>
                   </Button>
-                  <ComboBox prefHeight="35.0" prefWidth="150.0" promptText="Algoritmo" />
+                  <ComboBox fx:id="algorithmSelector" onAction="#selectorAction" prefHeight="35.0" prefWidth="150.0" promptText="Rate Monotonic" />
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <AnchorPane>
                      <children>
-                        <Text fill="#464646" strokeType="OUTSIDE" strokeWidth="0.0" text="A" textAlignment="CENTER" wrappingWidth="38.13671875" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Text fx:id="letterLabel" fill="#464646" strokeType="OUTSIDE" strokeWidth="0.0" text="A" textAlignment="CENTER" wrappingWidth="38.13671875" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font size="27.0" />
                            </font>

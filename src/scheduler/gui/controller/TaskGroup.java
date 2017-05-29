@@ -6,15 +6,22 @@
 package scheduler.gui.controller;
 
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,6 +30,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -42,6 +50,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import scheduler.gui.InstanceView;
+import scheduler.model.EDF;
+import scheduler.model.LSF;
 import scheduler.model.RateMonotonic;
 import scheduler.model.Scheduler;
 import scheduler.model.Task;
@@ -94,8 +104,10 @@ public class TaskGroup implements Initializable {
   private HBox statusPane;
   @FXML
   private Text timeLabel;
-  
-  
+  @FXML
+  private Text letterLabel;
+  @FXML
+  private ComboBox<?> algorithmSelector;
 
   /**
    * Initializes the controller class.
@@ -121,7 +133,7 @@ public class TaskGroup implements Initializable {
 
       x -= 20;
       x /= InstanceView.BLOCK_WIDTH;
-      timeLabel.setText("Tempo: " + String.format("%1$.1f", x)+" segundos");
+      timeLabel.setText("Tempo: " + String.format("%1$.1f", x) + " segundos");
     });
 
     time = new TranslateTransition(Duration.ZERO, line);
@@ -137,6 +149,14 @@ public class TaskGroup implements Initializable {
       }
     });
 
+    ObservableList options
+            = FXCollections.observableArrayList(
+                    "Rate Monotonic",
+                    "EDF",
+                    "LSF"
+            );
+    algorithmSelector.setItems(options);
+//
 //    addTask(new Task(lastLetter++ + "", 0, 2, 5, 5));
 //    addTask(new Task(lastLetter++ + "", 0, 1, 3, 4));
 //    addTask(new Task(lastLetter++ + "", 0, 2, 6, 6));
@@ -148,19 +168,24 @@ public class TaskGroup implements Initializable {
     if (x >= 20 && x < scheduler.getMMC() * InstanceView.BLOCK_WIDTH + 20) {
       line.setTranslateX(x);
     }
-
     time.stop();
-
   }
 
   private void addTask(Task task) {
-    clearAll();
+    tasks.add(task);
     scheduler.add(task);
+    repaint();
+  }
+
+  private void repaint() {
+    clearAll();
     boolean isWork = true;
-    for (Task instance : scheduler.compute()) {
+    List<Task> list = scheduler.compute();
+    Collections.sort(list);
+
+    for (Task instance : list) {
       addInstance(instance);
       isWork = isWork && !instance.isFail();
-      System.out.println("falhou: " + instance.isFail());
     }
     for (InstanceView instance : instances) {
       instance.setTime(scheduler.getMMC());
@@ -183,11 +208,10 @@ public class TaskGroup implements Initializable {
       winIcon.setVisible(false);
     }
 
-    time.setFromX(20);
+    time.setFromX(scheduler.getMMC() * InstanceView.BLOCK_WIDTH + 20);
     time.stop();
-    time.setDuration(Duration.seconds(scheduler.getMMC()));
+    time.setDuration(Duration.ZERO);
     time.setToX(scheduler.getMMC() * InstanceView.BLOCK_WIDTH + 20);
-    time.play();
   }
 
   @FXML
@@ -198,6 +222,11 @@ public class TaskGroup implements Initializable {
 
     Task task = new Task(lastLetter++ + "", 0, computation, period, dead);
     addTask(task);
+
+    computeField.clear();
+    periodField.clear();
+    deadField.clear();
+    letterLabel.setText(lastLetter + "");
   }
 
   private void clearAll() {
@@ -207,6 +236,7 @@ public class TaskGroup implements Initializable {
   }
 
   private void addInstance(Task task) {
+
     InstanceView view = new InstanceView(task);
     instances.add(view);
     int padding = 10;
@@ -217,6 +247,7 @@ public class TaskGroup implements Initializable {
         AnchorPane cardInside = (AnchorPane) node;
         AnchorPane core = (AnchorPane) cardInside.getChildren().get(0);
         InstanceView first = (InstanceView) core.getChildren().get(0);
+
         if (first.getTask().getName().equals(view.getTask().getName())) {
           card = cardInside;
           break;
@@ -235,6 +266,7 @@ public class TaskGroup implements Initializable {
       card.getChildren().add(corecard);
       corecard.setLayoutX(padding);
       corecard.setLayoutY(padding + 10);
+
       tasklistview.getChildren().add(card);
       addLabel(card);
     }
@@ -283,7 +315,6 @@ public class TaskGroup implements Initializable {
       Text text = (Text) ((BorderPane) node).getChildren().get(0);
       if (text.getText().equals(name)) {
         double height = card.getBoundsInLocal().getHeight() + 10;
-        System.out.println("height: " + height);
         ((BorderPane) node).setPrefHeight(height);
       }
     }
@@ -299,10 +330,18 @@ public class TaskGroup implements Initializable {
       time.stop();
     }
     else {
-      time.setFromX(line.getTranslateX());
-      double remain = scheduler.getMMC() - line.getTranslateX() / InstanceView.BLOCK_WIDTH;
-      time.setDuration(Duration.seconds(remain));
-      time.play();
+      try {
+        time.setFromX(line.getTranslateX());
+        double remain = scheduler.getMMC() - line.getTranslateX() / InstanceView.BLOCK_WIDTH;
+        time.setDuration(Duration.seconds(remain));
+        time.play();
+      }
+      catch (Exception e) {
+        time.stop();
+        time.setFromX(20);
+        time.setDuration(Duration.seconds(scheduler.getMMC()));
+        time.play();
+      }
     }
   }
 
@@ -310,6 +349,27 @@ public class TaskGroup implements Initializable {
   private void stopAction(ActionEvent event) {
     time.stop();
     line.setTranslateX(20);
+  }
+
+  @FXML
+  private void selectorAction(ActionEvent event) {
+    String option = (String) algorithmSelector.getValue();
+    switch (option) {
+      case "Rate Monotonic":
+        scheduler = new RateMonotonic();
+        break;
+      case "EDF":
+        scheduler = new EDF();
+        break;
+      case "LSF":
+        scheduler = new LSF();
+        break;
+
+    }
+    for (Task task : tasks) {
+      scheduler.add(task);
+    }
+    repaint();
   }
 
 }

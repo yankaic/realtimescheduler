@@ -8,7 +8,26 @@ public class EDF extends Scheduler {
 
   @Override
   public void allocate(Task task) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    int index = 0;
+    for (Task insideTask : readyQueue) {
+      boolean isPriority = task.getAbsoluteDeadline()< insideTask.getAbsoluteDeadline()
+              || task.getAbsoluteDeadline()== insideTask.getAbsoluteDeadline()
+              && task.getInitTime() < insideTask.getInitTime();
+      if (isPriority) {
+        break;
+      }
+      index++;
+    }
+    readyQueue.add(index, task);
+  }
+
+  @Override
+  public boolean isWorking() {
+//    double use = 0.0;
+//    for (Task task : original) {
+//      
+//    }
+    return false;
   }
 
 }

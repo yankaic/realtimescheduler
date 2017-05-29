@@ -32,4 +32,14 @@ public class RateMonotonic extends Scheduler {
     readyQueue.add(index, task);
   }
 
+  @Override
+  public boolean isWorking() {
+    double use = 0.0;
+    int n = originalTasks.size();
+    for (Task task : originalTasks) {
+      use += (double) task.getComputation() / (double) task.getPeriod();
+    }
+    return use <= n * (Math.pow(1, 1.0 / (double) n) - 1);
+  }
+
 }

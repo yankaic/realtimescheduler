@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author yanka
  */
-public class Task {
+public class Task implements Comparable<Task> {
 
   private final String name;
   private int init;
@@ -187,6 +187,11 @@ public class Task {
   
   public Timestamp getGlobalTime(){
     return time;
+  }
+
+  @Override
+  public int compareTo(Task t) {
+    return name.compareTo(t.name);
   }
 
 }

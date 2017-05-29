@@ -8,13 +8,9 @@ package run;
 import java.io.IOException;
 import java.util.Arrays;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import scheduler.gui.controller.TaskGroup;
 import scheduler.model.RateMonotonic;
@@ -38,8 +34,8 @@ public class Main extends Application {
       Scheduler scheduler = new RateMonotonic();
       scheduler.add(new Task("A", 0, 2, 4, 5));
       scheduler.add(new Task("B", 1, 1, 3, 3));
-      Task[] tasks = scheduler.compute();
-      System.out.println(Arrays.toString(tasks));
+//      Task[] tasks = scheduler.compute();
+//      System.out.println(Arrays.toString(tasks));
       
      
     }
