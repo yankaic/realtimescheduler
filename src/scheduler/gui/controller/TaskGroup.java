@@ -160,7 +160,7 @@ public class TaskGroup implements Initializable {
 
     fieldEvents();
 
-    addDefaultTasks();
+//    addDefaultTasks();
   }
 
   private void fieldEvents() {

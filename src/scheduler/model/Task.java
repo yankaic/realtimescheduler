@@ -18,7 +18,6 @@ public class Task implements Comparable<Task> {
   private int deadline;
   private int period;
   private int computation;
-  private InstanceView view;
   private final List<CpuUsage> usages;
   private Timestamp time;
 

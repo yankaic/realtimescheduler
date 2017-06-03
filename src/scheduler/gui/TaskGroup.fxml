@@ -65,7 +65,10 @@
                                  </padding>
                               </BorderPane>
                               <Line fx:id="line" endY="200.0" stroke="#616161" translateX="20.0" />
-                              <Circle fx:id="ball" fill="WHITE" onMouseDragged="#changeAction" radius="8.0" stroke="#9a9a9a" strokeType="INSIDE" strokeWidth="3.0" translateX="12.0" />
+                              <Circle fx:id="ball" fill="WHITE" onMouseDragged="#changeAction" radius="8.0" stroke="#9a9a9a" strokeType="INSIDE" strokeWidth="3.0" translateX="12.0">
+                                 <cursor>
+                                    <Cursor fx:constant="H_RESIZE" />
+                                 </cursor></Circle>
                            </children>
                         </StackPane>
                      </content>
