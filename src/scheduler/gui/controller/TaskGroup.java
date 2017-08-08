@@ -44,7 +44,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import scheduler.gui.InstanceView;
 import scheduler.model.EDF;
-import scheduler.model.LST;
+import scheduler.model.LSF;
 import scheduler.model.RateMonotonic;
 import scheduler.model.Scheduler;
 import scheduler.model.Task;
@@ -253,26 +253,6 @@ public class TaskGroup implements Initializable {
     time.setToX(scheduler.getMMC() * InstanceView.BLOCK_WIDTH + 20);
   }
 
-  @FXML
-  public void addAction() {
-    int computation = Integer.parseInt(computeField.getText());
-    int period = Integer.parseInt(periodField.getText());
-    int dead = Integer.parseInt(deadField.getText());
-
-    if (selectedTask != null) {
-      selectedTask.setComputation(computation);
-      selectedTask.setPeriod(period);
-      selectedTask.setDeadline(dead);
-      repaint();
-    }
-    else {
-      Task task = new Task(lastLetter++ + "", 0, computation, period, dead);
-      addTask(task);
-    }
-
-    selectTask("");
-  }
-
   private void clearAll() {
     tasklistview.getChildren().clear();
     labelBox.getChildren().clear();
@@ -367,55 +347,6 @@ public class TaskGroup implements Initializable {
     }
   }
 
- 
-
-  @FXML
-  private void playAction(ActionEvent event) {
-    if (time.getStatus() == Status.RUNNING) {
-      time.stop();
-    }
-    else {
-      try {
-        time.setFromX(line.getTranslateX());
-        double remain = scheduler.getMMC() - line.getTranslateX() / InstanceView.BLOCK_WIDTH;
-        time.setDuration(Duration.seconds(remain));
-        time.play();
-      }
-      catch (Exception e) {
-        time.stop();
-        time.setFromX(20);
-        time.setDuration(Duration.seconds(scheduler.getMMC()));
-        time.play();
-      }
-    }
-  }
-
-  @FXML
-  private void stopAction(ActionEvent event) {
-    time.stop();
-    line.setTranslateX(20);
-  }
-
-  @FXML
-  private void selectorAction(ActionEvent event) {
-    String option = (String) algorithmSelector.getValue();
-    switch (option) {
-      case "RM - Rate Monotonic":
-        scheduler = new RateMonotonic();
-        break;
-      case "EDF - Earliest Deadline":
-        scheduler = new EDF();
-        break;
-      case "LST - Least Slack Time":
-        scheduler = new LST();
-        break;
-    }
-    for (Task task : tasks) {
-      scheduler.add(task);
-    }
-    repaint();
-  }
-
   private void selectTask(String name) {
     for (Node node : labelBox.getChildren()) {
       if (node instanceof BorderPane) {
@@ -454,6 +385,73 @@ public class TaskGroup implements Initializable {
       addButton.setGraphic(addIcon);
       removeButton.setDisable(true);
     }
+  }
+  
+  @FXML
+  public void addAction() {
+    int computation = Integer.parseInt(computeField.getText());
+    int period = Integer.parseInt(periodField.getText());
+    int dead = Integer.parseInt(deadField.getText());
+
+    if (selectedTask != null) {
+      selectedTask.setComputation(computation);
+      selectedTask.setPeriod(period);
+      selectedTask.setDeadline(dead);
+      repaint();
+    }
+    else {
+      Task task = new Task(lastLetter++ + "", 0, computation, period, dead);
+      addTask(task);
+    }
+
+    selectTask("");
+  }
+  
+  @FXML
+  private void playAction(ActionEvent event) {
+    if (time.getStatus() == Status.RUNNING) {
+      time.stop();
+    }
+    else {
+      try {
+        time.setFromX(line.getTranslateX());
+        double remain = scheduler.getMMC() - line.getTranslateX() / InstanceView.BLOCK_WIDTH;
+        time.setDuration(Duration.seconds(remain));
+        time.play();
+      }
+      catch (Exception e) {
+        time.stop();
+        time.setFromX(20);
+        time.setDuration(Duration.seconds(scheduler.getMMC()));
+        time.play();
+      }
+    }
+  }
+
+  @FXML
+  private void stopAction(ActionEvent event) {
+    time.stop();
+    line.setTranslateX(20);
+  }
+
+  @FXML
+  private void selectorAction(ActionEvent event) {
+    String option = (String) algorithmSelector.getValue();
+    switch (option) {
+      case "RM - Rate Monotonic":
+        scheduler = new RateMonotonic();
+        break;
+      case "EDF - Earliest Deadline":
+        scheduler = new EDF();
+        break;
+      case "LST - Least Slack Time":
+        scheduler = new LSF();
+        break;
+    }
+    for (Task task : tasks) {
+      scheduler.add(task);
+    }
+    repaint();
   }
 
   @FXML

@@ -2,13 +2,13 @@ package scheduler.model;
 
 import scheduler.tool.Timestamp;
 import scheduler.tool.CpuUsage;
-import scheduler.gui.InstanceView;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
+ * Tarefa para um escalonador de Sistema de Tempo Real.
+ * Esta é uma representação de uma instância de tarefa de tempo real periódica.
  * @author yanka
  */
 public class Task implements Comparable<Task> {
@@ -122,6 +122,7 @@ public class Task implements Comparable<Task> {
   }
 
   /**
+   * Liberar tarefa.
    * Funcao que libera o uso do processador de acordo com o timestamp e liga o
    * registro de uso da cpu com o mais antigo se ainda houver a marcacao de
    * ativo.
